@@ -3,9 +3,17 @@ morgan = require('morgan');
 bodyParser = require('body-parser');
 uuid = require ('uuid');
 const app = express();
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+const Movies = Models.Movie;
+const Users = Models.User;
 
-//-----------------------------------Code to log which pages are visited-----------------------
 
+// Allows mongoose to connect to Movie Base database
+mongoose.connect('mongodb://localhost:27017/Movies', { useNewUrlParser: true, useUnifiedTopology: true });
+
+
+app.use(bodyParser.urlencoded({ extensed: true}));
 app.use(morgan('common'));
 app.use(bodyParser.json());
 
@@ -15,13 +23,28 @@ let users = [
   {
     id: 1,
     username: 'Jeff',
-    favouriteMovies: []
+    favouriteMovies: [
+        'Man of Steel',
+        'Captain America: The First Avenger'
+    ]
   },
 
   {
     id: 2,
     username: 'Sarah',
-    favouriteMovies: ['Iron Man']
+    favouriteMovies: [
+      'Iron Man',
+      'Spider-Man'
+    ]
+  },
+
+  {
+    id: 3,
+    usernname: 'Billy',
+    favouriteMovies: [
+      'Iron Man',
+      'Deadpool'
+    ]
   }
 ]
 
@@ -146,8 +169,8 @@ let movies = [
     Description: 'The saga of the Eternals, a race of immortal beings who lived on Earth and shaped its history and civilizations.',
 
     Genre:{
-      Name: 'Action',
-      Description: 'Action movies are packed full of high intensity scenes, designed to excite & awe'
+      Name: 'Fantasy',
+      Description: 'Fantasy is a genre of speculative fiction involving magical elements, typically set in a fictional universe and sometimes inspired by mythology and folklore. Its roots are in oral traditions, which then became fantasy literature and drama'
     },
 
     Director:{
@@ -163,7 +186,7 @@ let movies = [
 
     Genre:{
       Name: 'Comedy',
-      Description: 'Action movies are packed full of high intensity scenes, designed to excite & awe'
+      Description: 'Comedy is a genre of fiction that consists of discourses or works intended to be humorous or amusing by inducing laughter'
     },
 
     Director:{
@@ -195,76 +218,155 @@ let movies = [
 
 //-------------------===-------------Create a new user----------------------------
 //CREATE
-app.post ('/users', (req, res) => {
-const newUser = req.body;
-
-if (newUser.username) {
-  newUser.id = uuid.v4();
-  users.push(newUser);
-  res.status(201).json(newUser)
-} else {
-  res.status(400).send('Users need a name')
-}
-
-});
-
-//-------------------------------Option to update a user's info------------------------
-//UPDATE
-app.put ('/users/:id', (req, res) => {
-const { id } = req.params;
-const updatedUser = req.body;
-
-let user = users.find( user => user.id == id);
-  if (user) {
-    user.username = updatedUser.username;
-    res.status(200).json(user);
-  } else {
-    res.status(400).send('User not found')
-  }
-});
-
-//------------------------Allow users to add a movie name to their favourite movies list--------------
-//CREATE
-app.post ('/users/:id/:movieTitle', (req, res) => {
-const { id, movieTitle } = req.params;
-
-let user = users.find( user => user.id == id);
-  if (user) {
-    user.favouriteMovies.push(movieTitle);
-    res.status(200).send('movieName has been added to user id\'s array'); //to be added later
-  } else {
-    res.status(400).send('User not found')
-  }
-});
-
-//----------------------Allow users to remove movies from their favourite movies list------------------
-//DELETE
-app.delete ('/users/:id/:movieTitle', (req, res) => {
-const { id, movieTitle } = req.params;
-
-let user = users.find( user => user.id == id);
-  if (user) {
-    user.favouriteMovies = user.favouriteMovies.filter( title => title !== movieTitle);
-    res.status(200).send('movieName has been removed from user id\'s array'); //to be added later
-  } else {
-    res.status(400).send('User not found')
-  }
+//Add a user (JSON format)
+/*
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
+app.post('/users', (req, res) => {
+  Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + 'User already exists');
+      } else {
+        Users
+          .create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+          })
+          .then((user) =>{res.status(201).json(user) })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
+        })
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error: ' + error);
+    });
 });
 
 
-//--------------------------Allow users to remove their email from the database---------------------
-//DELETE
-app.delete ('/users/:id', (req, res) => {
-const { id, movieTitle } = req.params;
+//----------------------------------Read all user data---------------------------------
 
-let user = users.find( user => user.id == id);
-  if (user) {
-    users = users.filter( user => user.id !== id);
-    res.status(200).send('user id has been deleted'); //to be added later
-  } else {
-    res.status(400).send('User not found')
-  }
+app.get('/users', (req, res) => {
+  Users.find()
+  .then((users) => {
+    res.status(201).json(users);
+  })
+  .catch ((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
 });
+
+
+//-----------------------------Get a user by username---------------------------------
+
+app.get('/users/:Username', (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+//--------------------------Update a user's info, by username----------------------------
+/* Use JSON in this format
+{
+  Username: String,
+  (required)
+  Password: String,
+  (required)
+  Email: String,
+  (required)
+  Birthday: Date
+}*/
+app.put('/users/:Username', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
+    {
+      Username: req.body.Username,
+      Password: req.body.Password,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday
+    }
+  },
+  { new: true },
+  (err, updatedUser) => {
+    if(err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.json(updatedUser);
+    }
+  });
+});
+
+
+
+//--------------------------------Add a movie to a user's list of favorites---------------------------------
+
+app.post('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, {
+     $push: { FavoriteMovies: req.params.MovieID }
+   },
+   { new: true }, // This line makes sure that the updated document is returned
+  (err, updatedUser) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.status(200).send ('Movie added to favourites');
+    }
+  });
+});
+
+
+//-----------------------------------Delete a user by username-------------------------------
+app.delete('/users/:Username', (req, res) => {
+  Users.findOneAndRemove({ Username: req.params.Username })
+    .then((user) => {
+      if (!user) {
+        res.status(400).send(req.params.Username + ' was not found');
+      } else {
+        res.status(200).send(req.params.Username + ' was deleted.');
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
+
+
+//---------------------------Allow users to remove a movie from their list of favourites-----------------
+
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username }, {
+     $pull: { FavoriteMovies: req.params.MovieID }
+   },
+   { new: true }, // This line makes sure that the updated document is returned
+  (err, updatedUser) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    } else {
+      res.status(200).send ('Movie removed from favourites');
+    }
+  });
+});
+
+
 //-----------------------------------------------------------------------------------------------------
 
 //READ
