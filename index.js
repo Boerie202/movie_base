@@ -7,6 +7,12 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
+const Port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Movie Base is listening on port ${Port}`);
+});
+
+
 
 
 // Allows mongoose to connect to Movie Base database
@@ -181,7 +187,7 @@ app.get('/',(req, res) => {
 //-----------------------------Returns a list of all the movies-----------------------------
 //READ
 app.get('/movies', (req, res) => {
-  res.status(200).json(movies);
+  res.status(200).json(Movies);
 });
 
 app.use(express.static("public"));
@@ -190,7 +196,7 @@ app.use(express.static("public"));
 //READ
 app.get('/movies/:title', (req, res) => {
 const { title } = req.params;
-const movie = movies.find (movie => movie.Title === title);
+const movie = Movies.find (movie => movie.Title === title);
 
 if (movie) {
   res.status(200).json(movie);
@@ -204,7 +210,7 @@ if (movie) {
 //READ
 app.get('/movies/genre/:genreName', (req, res) => {
 const {genreName} = req.params;
-const genre = movies.find (movie => movie.Genre.Name === genreName).Genre;
+const genre = Movies.find (movie => movie.Genre.Name === genreName).Genre;
 
 if (genre) {
   res.status(200).json(genre);
@@ -218,7 +224,7 @@ if (genre) {
 //READ
 app.get('/movies/director/:directorName', (req, res) => {
 const {directorName} = req.params;
-const director = movies.find (movie => movie.Director.Name === directorName).Director;
+const director = MOvies.find (movie => movie.Director.Name === directorName).Director;
 
 if (director) {
   res.status(200).json(director);

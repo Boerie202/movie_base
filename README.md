@@ -1,6 +1,6 @@
-#Movie_API
+#Movie Base API
 
-This will be my first API ever created.
+My first API ever created.
 
 #Objective
 
