@@ -7,10 +7,7 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
-const Port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`Movie Base is listening on port ${Port}`);
-});
+
 
 
 
@@ -186,11 +183,23 @@ app.get('/',(req, res) => {
 
 //-----------------------------Returns a list of all the movies-----------------------------
 //READ
+
 app.get('/movies', (req, res) => {
+  Movies.find()
+  .then((movies) => {
+    res.status(200).json(movies);
+  })
+  .catch ((err) => {
+    console.error(err);
+    res.status(500).send('Error: ' + err);
+  });
+});
+
+/*app.get('/movies', (req, res) => {
   res.status(200).json(Movies);
 });
 
-app.use(express.static("public"));
+app.use(express.static("public"));*/
 
 //------------------------Returns data for a movie by using the title------------------------
 //READ
@@ -244,7 +253,7 @@ app.use((err, req, res, next) =>{
 });
 
 //------------------------Listener for port 8080-------------------------
-
-app.listen(8080, () => {
-console.log("Movie Base is listening on port 8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Movie Base is listening on port ${port}`);
 });
