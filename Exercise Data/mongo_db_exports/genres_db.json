@@ -1,0 +1,3 @@
+{"_id":{"$oid":"62063e94e361e42d053fe739"},"Genre":{"Name":"Action","Description":"Action movies are packed full of high intensity scenes, designed to excite & awe"}}
+{"_id":{"$oid":"62063e94e361e42d053fe73a"},"Genre":{"Name":"Comedy","Description":"Comedy is a genre of fiction that consists of discourses or works intended to be humorous or amusing by inducing laughter"}}
+{"_id":{"$oid":"62063e96e361e42d053fe73b"},"Genre":{"Name":"Fantasy","Description":"Fantasy is a genre of speculative fiction involving magical elements, typically set in a fictional universe and sometimes inspired by mythology and folklore. Its roots are in oral traditions, which then became fantasy literature and drama"}}
