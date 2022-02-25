@@ -1,0 +1,7 @@
+{"_id":{"$oid":"620aafe9a2c43112d5dda510"},"User":{"Username":"Jeff","Password":"sf4s5d4s","Email":"Jeff@gmail.com","Birthday":{"$date":"1992-10-11T00:00:00Z"}}}
+{"_id":{"$oid":"620aafe9a2c43112d5dda511"},"User":{"Username":"Gill","Password":"sd5sd4654s6","Email":"Gill@gmail.com","Birthday":{"$date":"1992-10-16T00:00:00Z"}}}
+{"_id":{"$oid":"620aafe9a2c43112d5dda512"},"User":{"Username":"Sarah","Password":"54641231324sd","Email":"Sarah@gmail.com","Birthday":{"$date":"1992-10-26T00:00:00Z"}}}
+{"_id":{"$oid":"620aafe9a2c43112d5dda513"},"User":{"Username":"Genny","Password":"sd54s64s51","Email":"Genny@gmail.com","Birthday":{"$date":"1992-10-31T00:00:00Z"}}}
+{"_id":{"$oid":"620aafe9a2c43112d5dda514"},"User":{"Username":"Billy","Password":"468456","Email":"billbat@yahoo.com","Birthday":{"$date":"1992-10-06T00:00:00Z"}}}
+{"_id":{"$oid":"620aafeaa2c43112d5dda515"},"User":{"Username":"Bubs","Password":"5646456cvd","Email":"billbat@bubsie@yahoo.com","Birthday":{"$date":"1992-10-21T00:00:00Z"}}}
+{"_id":{"$oid":"620ad70ec13593aae5bc0922"},"Username":"Matt","Password":"hello","Email":"matt@gmail.com","Birthday":{"$date":"1993-10-05T00:00:00Z"},"FavoriteMovies":[],"__v":0}
