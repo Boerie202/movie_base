@@ -11,8 +11,11 @@ const { check, validationResult } = require('express-validator');//Server side v
 
 
 
-// Allows mongoose to connect to Movie Base database
-mongoose.connect('mongodb://localhost:27017/MovieBaseDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// Allows mongoose to connect to Movie Base database stored locally
+//mongoose.connect('mongodb://localhost:27017/MovieBaseDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Connecting mongoose to the Movie Base Database hosted on Mongo Atlas
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.use(bodyParser.urlencoded({ extensed: true}));
