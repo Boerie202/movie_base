@@ -18,7 +18,7 @@ const { check, validationResult } = require('express-validator');//Server side v
 // mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connect('mongodb+srv://MattH:Motocros202@moviebasedb.js4zy.mongodb.net/MovieBaseDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
-
+//comment
 
 app.use(bodyParser.urlencoded({ extensed: true}));
 app.use(morgan('common'));
