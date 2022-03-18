@@ -248,7 +248,7 @@ app.get('/', (req, res) => {
 //-----------------------------Returns a list of all the movies-----------------------------
 
 //READ CRUD Operation
-app.get('/movies', function (req, res) => { //passport.authenticate('jwt', { session: false}
+app.get('/movies', function (req, res) { //passport.authenticate('jwt', { session: false}
   Movies.find()
     .then((movies) => {
       res.status(200).json(movies);
