@@ -302,7 +302,7 @@ app.get('/movies/genre/:genreName', passport.authenticate('jwt', { session: fals
 //READ CRUD Operation
 app.get('/movies/director/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { directorName } = req.params;
-  const director = MOvies.find(movie => movie.Director.Name === directorName).Director;
+  const director = Movies.find(movie => movie.Director.Name === directorName).Director;
 
   if (director) {
     res.status(200).json(director);
